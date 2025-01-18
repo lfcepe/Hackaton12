@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./Login.css";
 
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState("");
@@ -13,49 +14,61 @@ const Login = ({ onLogin }) => {
     const savedUser = JSON.parse(localStorage.getItem("user"));
 
     if (savedUser && savedUser.email === email && savedUser.password === password) {
-      onLogin(); // Autentica al usuario
+      onLogin();
     } else {
       setErrorMessage("Correo o contraseña incorrectos");
     }
   };
 
   const handleGoToRegister = () => {
-    navigate("/register"); // Redirige al registro
+    navigate("/register");
   };
 
   return (
-    <div>
-      <h2>Iniciar Sesión</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Correo Electrónico:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="usuario@puce.edu.ec"
-          />
-        </div>
+    <div className="login-container">
+      <div className="login-card">
+        <h2 className="login-title">Iniciar Sesión</h2>
+        
+        <form onSubmit={handleSubmit} className="login-form">
+          <div className="form-group">
+            <label className="form-label">Correo Electrónico:</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="usuario@puce.edu.ec"
+              className="form-input"
+              required
+            />
+          </div>
 
-        <div>
-          <label>Contraseña:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Contraseña"
-          />
-        </div>
+          <div className="form-group">
+            <label className="form-label">Contraseña:</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Contraseña"
+              className="form-input"
+              required
+            />
+          </div>
 
-        {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-        <button type="submit">Iniciar Sesión</button>
-      </form>
+          <button type="submit" className="login-button">
+            Iniciar Sesión
+          </button>
 
-      <div>
-        <button onClick={handleGoToRegister}>
-          ¿Aún no tienes una cuenta? Regístrate aquí
-        </button>
+          <button 
+            type="button" 
+            onClick={handleGoToRegister} 
+            className="login-button"
+            style={{ background: 'transparent', border: '1px solid #4299e1' }}
+          >
+            ¿Aún no tienes una cuenta? Regístrate aquí
+          </button>
+        </form>
       </div>
     </div>
   );

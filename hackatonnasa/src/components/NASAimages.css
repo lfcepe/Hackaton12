@@ -95,7 +95,6 @@
   }
 }
 
-/* Añadimos una animación sutil de brillo para las estrellas */
 .nasa-container::before {
   content: '';
   position: fixed;

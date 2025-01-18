@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./Register.css";
 
 const Register = ({ onRegister }) => {
   const [email, setEmail] = useState("");
@@ -21,52 +22,59 @@ const Register = ({ onRegister }) => {
       setErrorMessage("El correo ya está registrado");
     } else {
       const newUser = { email, password };
-      onRegister(newUser); // Guarda el nuevo usuario
-      navigate("/"); // Redirige a login
+      onRegister(newUser);
+      navigate("/");
     }
   };
 
   return (
-    <div>
-      <h2>Registro</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Correo Electrónico:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="usuario@puce.edu.ec"
-            required
-          />
-        </div>
+    <div className="register-container">
+      <div className="register-card">
+        <h2 className="register-title">Registro</h2>
+        <form onSubmit={handleSubmit} className="register-form">
+          <div className="form-group">
+            <label className="form-label">Correo Electrónico:</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="usuario@puce.edu.ec"
+              required
+              className="form-input"
+            />
+          </div>
 
-        <div>
-          <label>Contraseña:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Contraseña"
-            required
-          />
-        </div>
+          <div className="form-group">
+            <label className="form-label">Contraseña:</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Contraseña"
+              required
+              className="form-input"
+            />
+          </div>
 
-        <div>
-          <label>Confirmar Contraseña:</label>
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="Confirmar Contraseña"
-            required
-          />
-        </div>
+          <div className="form-group">
+            <label className="form-label">Confirmar Contraseña:</label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Confirmar Contraseña"
+              required
+              className="form-input"
+            />
+          </div>
 
-        {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-        <button type="submit">Registrarse</button>
-      </form>
+          <button type="submit" className="register-button">
+            Registrarse
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
