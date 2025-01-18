@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import './Login.css';
 
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState("");
@@ -17,30 +18,42 @@ const Login = ({ onLogin }) => {
   };
 
   return (
-    <div style={{ maxWidth: "400px", margin: "50px auto" }}>
-      <h2>Iniciar Sesión</h2>
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column" }}>
-        <label htmlFor="email">Correo Electrónico:</label>
-        <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <label htmlFor="password">Contraseña:</label>
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <button type="submit" style={{ marginTop: "10px" }}>
-          Iniciar Sesión
-        </button>
-      </form>
+    <div className="login-container">
+      <div className="login-card">
+        <h2 className="login-title">Iniciar Sesión</h2>
+        <form onSubmit={handleSubmit} className="login-form">
+          <div className="form-group">
+            <label htmlFor="email" className="form-label">
+              Correo Electrónico:
+            </label>
+            <input
+              type="email"
+              id="email"
+              className="form-input"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password" className="form-label">
+              Contraseña:
+            </label>
+            <input
+              type="password"
+              id="password"
+              className="form-input"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          {error && <p className="error-message">{error}</p>}
+          <button type="submit" className="login-button">
+            Iniciar Sesión
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
