@@ -1,58 +1,61 @@
 import React, { useState } from "react";
-import './Login.css';
+import { useNavigate } from "react-router-dom";
 
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Simula una validación de credenciales
-    if (email === "user@example.com" && password === "123456") {
-      onLogin();
+    const savedUser = JSON.parse(localStorage.getItem("user"));
+
+    if (savedUser && savedUser.email === email && savedUser.password === password) {
+      onLogin(); // Autentica al usuario
     } else {
-      setError("Correo electrónico o contraseña incorrectos.");
+      setErrorMessage("Correo o contraseña incorrectos");
     }
   };
 
+  const handleGoToRegister = () => {
+    navigate("/register"); // Redirige al registro
+  };
+
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <h2 className="login-title">Iniciar Sesión</h2>
-        <form onSubmit={handleSubmit} className="login-form">
-          <div className="form-group">
-            <label htmlFor="email" className="form-label">
-              Correo Electrónico:
-            </label>
-            <input
-              type="email"
-              id="email"
-              className="form-input"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password" className="form-label">
-              Contraseña:
-            </label>
-            <input
-              type="password"
-              id="password"
-              className="form-input"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          {error && <p className="error-message">{error}</p>}
-          <button type="submit" className="login-button">
-            Iniciar Sesión
-          </button>
-        </form>
+    <div>
+      <h2>Iniciar Sesión</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Correo Electrónico:</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="usuario@puce.edu.ec"
+          />
+        </div>
+
+        <div>
+          <label>Contraseña:</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Contraseña"
+          />
+        </div>
+
+        {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+
+        <button type="submit">Iniciar Sesión</button>
+      </form>
+
+      <div>
+        <button onClick={handleGoToRegister}>
+          ¿Aún no tienes una cuenta? Regístrate aquí
+        </button>
       </div>
     </div>
   );
