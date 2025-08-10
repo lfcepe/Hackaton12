@@ -28,7 +28,6 @@ jobs:
         shell: bash
         run: |
           set -e
-          # Busca en rutas comunes
           CANDIDATES=$(printf "%s\n" \
             "package.json" \
             "hackatonnasa/package.json" \
@@ -53,6 +52,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: ${{ steps.detect.outputs.react_path }}/package-lock.json
       # Este paso solo corre si existe package.json.
 
       # (Opcional) Instalar dependencias
@@ -72,12 +73,18 @@ jobs:
         working-directory: ${{ steps.detect.outputs.react_path }}
         run: npm run build --if-present
 
+      # Desplegar a GitHub Pages (rama gh-pages) con gh-pages
+      - name: Deploy to GitHub Pages
+        if: ${{ steps.detect.outputs.react_path != '' }}
+        working-directory: ${{ steps.detect.outputs.react_path }}
+        run: npm run deploy
+
       # Uso del GITHUB_TOKEN
-      - name: Use Personal Access Token
+      - name: Use GITHUB_TOKEN
         # Ejecuta el comando curl para realizar una llamada a la API de GitHub.
         run: |
-          curl -H "Authorization: Bearer ${{ secrets.PATH_SECRET }}" \
+          curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
                -H "Accept: application/vnd.github.v3+json" \
                https://api.github.com/user/repos
 # GITHUB_TOKEN se genera automáticamente para cada ejecución del flujo y tiene permisos predeterminados para interactuar con el repositorio.
-# versión 3 de la API de GitHub. con esta estructura
+# versión 3 de la API de GitHub. con este formato
