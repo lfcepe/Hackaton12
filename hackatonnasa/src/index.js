@@ -5,13 +5,12 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { HashRouter } from 'react-router-dom'; // ⬅️ NUEVO
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+import { BrowserRouter } from 'react-router-dom';
+
 root.render(
   <React.StrictMode>
-    <HashRouter>
+    <BrowserRouter basename="/Hackaton12">
       <App />
-    </HashRouter>
+    </BrowserRouter>
   </React.StrictMode>
 );
-
-reportWebVitals();
