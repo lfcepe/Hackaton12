@@ -1,0 +1,83 @@
+name: flujo_trabajo # nombre del flujo de trabajo
+
+# evento que activa el flujo de trabajo 
+on:
+  push:
+    branches:
+      - main
+# El flujo se ejecutará cada vez que haya un push (es decir, una actualización o un nuevo commit) a la rama main.
+
+# configuración del trabajo
+jobs:
+  # Identificador del trabajo (job) dentro del flujo de trabajo.
+  example-job:
+    # El job se ejecutará en un runner con el sistema operativo Ubuntu en su última versión.
+    runs-on: ubuntu-latest
+
+    # Pasos del job
+    steps:
+      # Checkout del código
+      - name: Checkout code
+        uses: actions/checkout@v4
+      # Este paso utiliza la acción oficial actions/checkout en su versión 4.
+      # Clona el código fuente del repositorio en el runner para que pueda ser utilizado por otros pasos.
+
+      # Detectar la carpeta donde está el package.json (raíz o subcarpeta)
+      - name: Detect React app path
+        id: detect
+        shell: bash
+        run: |
+          set -e
+          # Busca en rutas comunes
+          CANDIDATES=$(printf "%s\n" \
+            "package.json" \
+            "hackatonnasa/package.json" \
+            "app/package.json")
+          REACT_PATH=""
+          for f in $CANDIDATES; do
+            if [ -f "$f" ]; then
+              REACT_PATH=$(dirname "$f")
+              break
+            fi
+          done
+          echo "react_path=$REACT_PATH" >> "$GITHUB_OUTPUT"
+          if [ -z "$REACT_PATH" ]; then
+            echo "No se encontró package.json, se omiten pasos de npm."
+          else
+            echo "Se encontró package.json en: $REACT_PATH"
+          fi
+
+      # (Opcional) Configurar Node.js si tu proyecto lo usa
+      - name: Setup Node.js
+        if: ${{ steps.detect.outputs.react_path != '' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      # Este paso solo corre si existe package.json.
+
+      # (Opcional) Instalar dependencias
+      - name: Install dependencies
+        if: ${{ steps.detect.outputs.react_path != '' }}
+        working-directory: ${{ steps.detect.outputs.react_path }}
+        run: |
+          if [ -f "package-lock.json" ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      # (Opcional) Ejecutar build si existe script de build
+      - name: Build
+        if: ${{ steps.detect.outputs.react_path != '' }}
+        working-directory: ${{ steps.detect.outputs.react_path }}
+        run: npm run build --if-present
+
+      # Uso del GITHUB_TOKEN
+      - name: Use Personal Access Token
+        # Ejecuta el comando curl para realizar una llamada a la API de GitHub.
+        run: |
+          curl -H "Authorization: Bearer ${{ secrets.PATH_SECRET }}" \
+               -H "Accept: application/vnd.github.v3+json" \
+               https://api.github.com/user/repos
+# GITHUB_TOKEN se genera automáticamente para cada ejecución del flujo y tiene permisos predeterminados para interactuar con el repositorio.
+# versión 3 de la API de GitHub. con esta estructura
