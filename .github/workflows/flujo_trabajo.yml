@@ -33,7 +33,7 @@ jobs:
       # (Opcional) Instalar dependencias
       - name: Install dependencies
         if: ${{ hashFiles('**/package.json') != '' }}
-        run: npm ci
+        run: npm install
 
       # (Opcional) Ejecutar build si existe script de build
       - name: Build
